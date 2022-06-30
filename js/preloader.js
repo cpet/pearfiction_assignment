@@ -12,7 +12,7 @@ pmsm.startPreload = function (progress_text) {
         .add('hv3', './assets/hv3_symbol.png')
         .add('hv4', './assets/hv4_symbol.png')
 
-        .add('lv1', './assets/hv1_symbol.png')
+        .add('lv1', './assets/lv1_symbol.png')
         .add('lv2', './assets/lv2_symbol.png')
         .add('lv3', './assets/lv3_symbol.png')
         .add('lv4', './assets/lv4_symbol.png')
@@ -45,8 +45,9 @@ pmsm.onPreloadComplete = function () {
         pmsm.progressText.text = "Preload Complete";
         setTimeout(function startGameDelayed() {
             pmsm.gameContainer.removeChild(pmsm.progressText);
+            pmsm.progressText.destroy();
             pmsm.startGame();
-        }, 1000);
+        }, 500);
     }
     else {
         pmsm.startGame();
