@@ -4,8 +4,7 @@ var pmsm = pmsm || {};
  * 
  */
 pmsm.startGame = function () {
-    console.log("Game Start ...");
-
+    
     pmsm.TEXTURES = {
         'hv1': PIXI.Texture.from('hv1'),
         'hv2': PIXI.Texture.from('hv2'),
@@ -175,7 +174,6 @@ pmsm.fitGame = function () {
 pmsm.updateReelsPositions = function () {
     for (let row = 0; row < pmsm.NUM_ROWS_DISPLAY; row++) {
         for (let col = 0; col < pmsm.NUM_COLS_DISPLAY; col++) {
-            // console.log('display index: ', (row + col * pmsm.NUM_ROWS_DISPLAY));
             const spr = pmsm.displayReels[row + col * pmsm.NUM_ROWS_DISPLAY];
 
             const reel_pos = pmsm.reelPositions[col];
@@ -395,7 +393,6 @@ pmsm.checkWins = function () {
  * e.g.: { symbol: 'hv1', numOccurences: 4, score: 20 }
  */
 pmsm.checkOccurences = function (occurences) {
-    console.log('occurences: ', occurences);
     const score = 0;
     for (const key in occurences) {
         if (Object.hasOwnProperty.call(occurences, key)) {
