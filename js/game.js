@@ -103,14 +103,69 @@ pmsm.startGame = function () {
  * 
  */
 pmsm.fitGame = function () {
-    if (pmsm.reelMargin) {
-        pmsm.reelContainer.x = pmsm.reelMargin.x;
-        pmsm.reelContainer.y = pmsm.reelMargin.y;
+    if (!pmsm.reelMargin) {
+        return;
     }
+    pmsm.reelContainer.x = pmsm.reelMargin.x;
+    pmsm.reelContainer.y = pmsm.reelMargin.y;
+
 
     if (pmsm.uiMargin) {
         pmsm.uiContainer.x = pmsm.uiMargin.x + pmsm.reelContainer.x + pmsm.reelContainer.width;
         pmsm.uiContainer.y = pmsm.uiMargin.y;
+    }
+
+    let screen = pmsm.app.renderer.screen;
+    let logical_width, logical_height;
+
+    if (screen.width >= screen.height) {
+        // Landscape orientation. 500 comes from the wining textfield on the right.
+        logical_width = (pmsm.reelMargin.x * 2) + 5 * (250 + pmsm.reelPadding.x) + 500;
+        logical_height = (pmsm.reelMargin.y * 4) + 3 * (250 + pmsm.reelPadding.y);
+
+        const scaleX = screen.width / logical_width;
+        const scaleY = screen.height / logical_height;
+
+        pmsm.gameContainer.scale.x = pmsm.gameContainer.scale.y = Math.min(scaleX, scaleY);
+
+        // Reset the UI to the Landscape coordinates.
+        pmsm.spinButton.x = 30;
+        pmsm.spinButton.y = 125;
+        pmsm.winsText.y = 0;
+        pmsm.winsText.y = 400;
+    }
+    else {
+
+        // Portrait orientation. 700 comes from the bottom part (multi-line text field + spin button).
+        logical_width = (pmsm.reelMargin.x * 2) + 5 * (250 + pmsm.reelPadding.x);
+        logical_height = (pmsm.reelMargin.y * 4) + 3 * (250 + pmsm.reelPadding.y) + 700;
+
+        const scaleX = screen.width / logical_width;
+        const scaleY = screen.height / logical_height;
+
+        pmsm.gameContainer.scale.x = pmsm.gameContainer.scale.y = Math.min(scaleX, scaleY);
+
+        pmsm.uiContainer.x = pmsm.uiMargin.x;
+        pmsm.uiContainer.y = 750 + (pmsm.reelMargin.y * 2) + (pmsm.uiMargin.y * 2);
+
+        pmsm.spinButton.x = 500 + pmsm.uiMargin.x;
+        pmsm.spinButton.y = 0
+
+        // Reset the UI to the Landscape coordinates.
+        pmsm.winsText.y = 0;
+        pmsm.winsText.y = 0;
+    }
+
+    // Center alight the game contents horizontally.
+    let game_cont_w = logical_width * pmsm.gameContainer.scale.x;
+    if (screen.width > game_cont_w) {
+        pmsm.gameContainer.x = (screen.width - game_cont_w) / 2;
+    }
+
+    // Center alight the game contents horizontally.
+    let game_cont_h = logical_height * pmsm.gameContainer.scale.y;
+    if (screen.height > game_cont_h) {
+        pmsm.gameContainer.y = (screen.height - game_cont_h) / 2;
     }
 }
 
@@ -403,8 +458,8 @@ pmsm.addPaylineText = function (payline, symbol, num_occurences, score) {
  * 
  */
 pmsm.initSpinButton = function () {
-    pmsm.button = PIXI.Sprite.from('spin_button');
-    let button = pmsm.button;
+    pmsm.spinButton = PIXI.Sprite.from('spin_button');
+    let button = pmsm.spinButton;
     button.x = 30;
     button.y = 125;
     button.buttonMode = true;
@@ -445,6 +500,7 @@ pmsm.initWinsTextField = function () {
         "- payline 7, lv3 x3, 1\n"
 
     pmsm.winsText = new PIXI.Text(str);
+    pmsm.winsText.x = 0;
     pmsm.winsText.y = 400;
     pmsm.uiContainer.addChild(pmsm.winsText);
 }
